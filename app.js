@@ -66,7 +66,21 @@ app.get("/movies/:movieId/", async (request, response) => {
     SELECT * FROM movie WHERE movie_id = '${movieId}';`;
   const movieArray = await db.get(movieIdQuery);
   response.send(convertCase1(movieArray));
-  // response.send(movieArray);
+});
+
+//Update movie Details API
+app.put("/movies/:movieId/", async (request, response) => {
+  const { movieId } = request.params;
+  const movieDetails = request.body;
+  const { directorId, movieName, leadActor } = movieDetails;
+  const movieUpdateQuery = `
+    UPDATE movie 
+    SET director_id = ${directorId},
+        movie_name = '${movieName}',
+        lead_actor = '${leadActor}'
+    WHERE movie_id = ${movieId};`;
+  await db.run(movieUpdateQuery);
+  response.send("Movie Details Updated");
 });
 
 module.exports = app;
