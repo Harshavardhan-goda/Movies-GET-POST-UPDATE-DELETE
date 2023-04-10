@@ -82,5 +82,13 @@ app.put("/movies/:movieId/", async (request, response) => {
   await db.run(movieUpdateQuery);
   response.send("Movie Details Updated");
 });
+//Delete movieDetails API
+app.delete("/movies/:movieId/", async (request, response) => {
+  const { movieId } = request.params;
+  const deleteQuery = `
+     DELETE FROM movie WHERE movie_id = ${movieId};`;
+  await db.run(deleteQuery);
+  response.send("Movie Removed");
+});
 
 module.exports = app;
