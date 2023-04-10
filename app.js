@@ -90,5 +90,31 @@ app.delete("/movies/:movieId/", async (request, response) => {
   await db.run(deleteQuery);
   response.send("Movie Removed");
 });
+//Get director Details API
+const caseConvert3 = (each) => {
+  return {
+    directorId: each.director_id,
+    directorName: each.director_name,
+  };
+};
+app.get("/directors", async (request, response) => {
+  const getDirectorQuery = `
+    SELECT * FROM director;`;
+  const directorArray = await db.all(getDirectorQuery);
+  response.send(directorArray.map((each) => caseConvert3(each)));
+});
 
+//Get director movie API
+const convertCase4 = (each) => {
+  return {
+    movieName: each.movie_name,
+  };
+};
+app.get("/directors/:directorId/movies/", async (request, response) => {
+  const { directorId } = request.params;
+  const getDirectorQuery = `
+    SELECT movie_name FROM movie WHERE director_id = ${directorId};`;
+  const movieArray = await db.all(getDirectorQuery);
+  response.send(movieArray.map((each) => convertCase4(each)));
+});
 module.exports = app;
