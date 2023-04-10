@@ -51,4 +51,22 @@ app.post("/movies/", async (request, response) => {
   response.send("Movie Successfully Added");
 });
 
+//Get movie_id API
+const convertCase1 = (each) => {
+  return {
+    movieId: each.movie_id,
+    directorId: each.director_id,
+    movieName: each.movie_name,
+    leadActor: each.lead_actor,
+  };
+};
+app.get("/movies/:movieId/", async (request, response) => {
+  const { movieId } = request.params;
+  const movieIdQuery = `
+    SELECT * FROM movie WHERE movie_id = '${movieId}';`;
+  const movieArray = await db.get(movieIdQuery);
+  response.send(convertCase1(movieArray));
+  // response.send(movieArray);
+});
+
 module.exports = app;
